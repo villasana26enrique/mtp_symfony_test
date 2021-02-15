@@ -30,6 +30,12 @@ class LoginFormAuthAuthenticator extends AbstractFormLoginAuthenticator
     private $csrfTokenManager;
     private $encoder;
 
+    /** @var \Doctrine\Persistence\ObjectRepository */
+    private $userRepository;
+
+    /** @var \Doctrine\Persistence\ObjectRepository */
+    private $activityRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager, 
         UrlGeneratorInterface $urlGenerator, 
@@ -40,6 +46,8 @@ class LoginFormAuthAuthenticator extends AbstractFormLoginAuthenticator
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->encoder = $encoder;
+        $this->userRepository = $entityManager->getRepository(User::class);
+        $this->activityRepository = $entityManager->getRepository('App:RecentActivity');
     }
 
     public function supports(Request $request)
@@ -70,7 +78,7 @@ class LoginFormAuthAuthenticator extends AbstractFormLoginAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
+        $user = $this->userRepository->findOneBy(['email' => $credentials['email']]);
 
         if (!$user) {
             // fail authentication with a custom error
@@ -83,6 +91,9 @@ class LoginFormAuthAuthenticator extends AbstractFormLoginAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         if ($this->encoder->isPasswordValid($user, $credentials['password'])){
+            $email = $credentials['email'];
+            $lasActivity = date('Y/m/d H:i:s');
+            $this->activityRepository->saveActivity($email, $lasActivity);
             return true;
         } else {
             return false;

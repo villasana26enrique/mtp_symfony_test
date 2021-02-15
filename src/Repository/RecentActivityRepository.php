@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\RecentActivity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method RecentActivity|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RecentActivityRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
         parent::__construct($registry, RecentActivity::class);
+        $this->manager = $manager;
     }
 
     // /**
@@ -47,4 +49,14 @@ class RecentActivityRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function saveActivity($email, $datetime)
+    {
+        $newActivity= new RecentActivity();
+        $newActivity
+            ->setEmail($email)
+            ->setLastConnection(new \DateTime($datetime));
+        $this->manager->persist($newActivity);
+        $this->manager->flush();
+    }
 }
