@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class HomeController extends AbstractController
 {
     /** @var \Doctrine\Persistence\ObjectRepository */
-    private $activiryRepository;
+    private $activityRepo;
 
     /**
      * @param EntityManagerInterface $entityManager
@@ -18,7 +18,7 @@ class HomeController extends AbstractController
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->activiryRepository = $entityManager->getRepository('App:RecentActivity');
+        $this->activityRepo = $entityManager->getRepository('App:RecentActivity');
     }
 
     /**
@@ -26,7 +26,7 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
-        $activities = $this->activiryRepository->findAll();
+        $activities = $this->activityRepo->findAll();
         $data = array();
         foreach ($activities as $activity) {
             $data[] = [

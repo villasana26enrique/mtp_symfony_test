@@ -47,4 +47,30 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function save($email, $password, $photo, $country)
+    {
+        $user = new User();
+        $user
+            ->setEmail($email)
+            ->setPassword($password)
+            ->setPhoto($photo)
+            ->setCountry($country);
+        $this->manager->persist($user);
+        $this->manager->flush();
+    }
+
+    public function update($user)
+    {
+        $this->manager->persist($user);
+        $this->manager->flush();
+
+        return $user;
+    }
+
+    public function delete($user)
+    {
+        $this->manager->remove($user);
+        $this->manager->flush();
+    }
 }
