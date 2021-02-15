@@ -4,6 +4,10 @@ security:
         App\Entity\User: sha512
     providers:
         users_in_memory: { memory: null }
+        our_db_provider:
+            entity:
+                class: App\Entity\User
+                property: username
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
