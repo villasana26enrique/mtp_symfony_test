@@ -14,7 +14,7 @@ class Fixtures extends Fixture
         $user
             ->setEmail('admin@admin.com')
             ->setPassword('nhDr7OyKlXQju+Ge/WKGrPQ9lPBSUFfpK+B1xqx/+8zLZqRNX0+5G1zBQklXUFy86lCpkAofsExlXiorUcKSNQ==')
-            ->setCountry('VE')
+            ->setCountry('Estados Unidos')
             ->setPhoto('');
 
         $manager->persist($user);
