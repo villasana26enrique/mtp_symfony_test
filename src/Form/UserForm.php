@@ -44,10 +44,10 @@ class UserForm extends AbstractType
                 ]
             )
             ->add(
-                'imageFile',
+                'profilePic',
                 FileType::class,
                 [
-                    'attr' => ['class' => 'form-control'],
+                    'attr' => ['class' => 'ml-2'],
                     'data_class' => null,
                     'required' => false,
                     'mapped' => false

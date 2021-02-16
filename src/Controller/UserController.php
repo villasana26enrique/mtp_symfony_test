@@ -41,7 +41,8 @@ class UserController extends AbstractController
             $data[] = [
                 "id" => $user->getId(),
                 "email" => $user->getEmail(),
-                "country" => $user->getCountry()
+                "country" => $user->getCountry(),
+                "photo" => $user->getPhoto()
             ];
         }
         return $this->render('user/index.html.twig', [
@@ -59,7 +60,7 @@ class UserController extends AbstractController
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $uploadedFile = $form['imageFile']->getData();
+            $uploadedFile = $form['profilePic']->getData();
             if($uploadedFile) {
                 $destination = $this->getParameter('kernel.project_dir').'/public/uploads/user_photo';
                 $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -101,7 +102,7 @@ class UserController extends AbstractController
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $uploadedFile = $form['imageFile']->getData();
+            $uploadedFile = $form['profilePic']->getData();
             if($uploadedFile) {
                 $destination = $this->getParameter('kernel.project_dir').'/public/uploads/user_photo';
                 $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);

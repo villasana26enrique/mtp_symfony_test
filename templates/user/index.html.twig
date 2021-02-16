@@ -55,6 +55,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Email</th>
                 <th scope="col">Country</th>
+                <th scope="col">Profile Pic</th>
                 <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -64,6 +65,13 @@
                   <th scope="row">{{ value['id'] }}</th>
                   <td>{{ value['email'] }}</td>
                   <td>{{ value['country'] }}</td>
+                  <td>
+                    {% if (value['photo'] != null) %}
+                      <img src="uploads/user_photo/{{value['photo']}}" width="85" height="85" class="rounded float-start" alt="{{value['photo']}}">
+                    {% else %}
+                      <img src="no_photo.png" width="85" height="85" class="rounded float-start" alt="{{value['photo']}}">
+                    {% endif %}
+                  </td>
                   <td>
                       <a  class="btn btn-primary"
                           href="{{ path('update_user', {'id': value['id'] }) }}">
