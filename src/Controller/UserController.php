@@ -69,8 +69,9 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_list');
         }
 
-        return $this->render('user/create.html.twig', [
+        return $this->render('user/form.html.twig', [
             'controller_name' => 'UserController',
+            'create_user' => true,
             'form' => $form->createView()
         ]);
     }
@@ -96,8 +97,9 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_list');
         }
 
-        return $this->render('user/edit.html.twig', [
+        return $this->render('user/form.html.twig', [
             'controller_name' => 'UserController',
+            'create_user' => false,
             'form' => $form->createView()
         ]);
     }

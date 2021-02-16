@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
+{% block title %}
+  {% if (create_user) %}
+    Create User
+  {% else %}
+    Update User
+  {% endif %}
+{% endblock %}
 
-{% block title %}Create User{% endblock %}
 {% block body %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="#">Mtp Test</a>
@@ -28,32 +34,31 @@
       </div>
     </nav>
     <div class="container mt-5">
-        <div class="blog-header">
-            <h2 class="blog-title">Crear Usuario</h2>
+      <div class="card">
+      {{ form_start(form) }}
+        {% if (create_user) %}
+          <h5 class="card-header">Create User</h5>
+        {% else %}
+          <h5 class="card-header">Update User</h5>
+        {% endif %}
+        <div class="card-body">
+          <div class="form-group col-md-6 offset-md-3">
+              {{ form_row(form.email) }}
+          </div>
+          <div class="form-group col-md-6 offset-md-3">
+              {{ form_row(form.password) }}
+          </div>
+          <div class="form-group col-md-6 offset-md-3">
+              {{ form_row(form.country) }}
+          </div>
+          <div class="form-group col-md-6 offset-md-3">
+              {{ form_row(form.photo) }}
+          </div>
+          <div class="form-group col-md-6 offset-md-3">
+            {{ form_row(form.submit) }}
+          </div>
         </div>
-
-        <div class="row">
-            <div class="col-sm-12 blog-main">
-                {{ form_start(form) }}
-                <div class="col-md-12">
-                    <div class="form-group col-md-4">
-                        {{ form_row(form.email) }}
-                    </div>
-                    <div class="form-group col-md-4">
-                        {{ form_row(form.password) }}
-                    </div>
-                    <div class="form-group col-md-4">
-                        {{ form_row(form.country) }}
-                    </div>
-                    <div class="form-group col-md-12">
-                        {{ form_row(form.photo) }}
-                    </div>
-                </div>
-                <div class="form-group col-md-4 pull-right">
-                    {{ form_row(form.submit) }}
-                </div>
-                {{ form_end(form) }}
-            </div>
-        </div>
+      {{ form_end(form) }}
+      </div>
     </div>
 {% endblock %}

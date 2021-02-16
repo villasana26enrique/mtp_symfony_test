@@ -53,7 +53,7 @@ class UserForm extends AbstractType
                 'submit',
                 SubmitType::class,
                 [
-                    'attr' => ['class' => 'form-control btn-primary pull-right'],
+                    'attr' => ['class' => 'form-control btn-primary col-md-4 mt-2'],
                     'label' => 'Guardar Cambios'
                 ]
             );

@@ -42,10 +42,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12">
+            <div class="col-md-12 col-lg-12 col-xl-12 text-right">
                 <a  class="btn btn-primary"
                     href="{{ path('create_user') }}">
-                    Crear Usuario
+                    Add User
                 </a>
             </div>
         </div>
@@ -63,10 +63,14 @@
                 <th scope="row">1</th>
                 <td>Mark</td>
                 <td>Otto</td>
-                <td class="d-flex justify-content-center">
+                <td>
                     <a  class="btn btn-primary"
                         href="{{ path('update_user', {'id': 1 }) }}">
                         <i class="fas fa-user-edit"></i>
+                    </a>
+                    <a  class="btn btn-danger"
+                        href="{{ path('delete_user', {'id': 1 }) }}">
+                        <i class="fas fa-user-times"></i>
                     </a>
                 </td>
                 </tr>
