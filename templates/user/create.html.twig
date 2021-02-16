@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create User{% endblock %}
+{% block body %}
+    <nav class="navbar navbar-default navbar-static-top">
+        <div id="navbar" class="collapse navbar-collapse pull-right">
+            <ul class="nav navbar-nav">
+                {% if app.user %}
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/user">User</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="blog-header">
+            <h2 class="blog-title">Crear Usuario</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 blog-main">
+                {{ form_start(form) }}
+                <div class="col-md-12">
+                    <div class="form-group col-md-4">
+                        {{ form_row(form.email) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{ form_row(form.password) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{ form_row(form.country) }}
+                    </div>
+                    <div class="form-group col-md-12">
+                        {{ form_row(form.photo) }}
+                    </div>
+                </div>
+                <div class="form-group col-md-4 pull-right">
+                    {{ form_row(form.submit) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+<nav class="navbar navbar-default navbar-static-top">
+        <div id="navbar" class="collapse navbar-collapse pull-right">
+            <ul class="nav navbar-nav">
+                {% if app.user %}
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/user">User</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>

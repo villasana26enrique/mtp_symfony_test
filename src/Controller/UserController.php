@@ -6,6 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Entity\User;
+use App\Form\CreateUserForm;
 
 class UserController extends AbstractController
 {
@@ -43,26 +46,27 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user", name="add_user", methods={"POST"})
+     * @Route("/user/create", name="create_user")
      */
-    public function add(Request $request)
-    {
-        $email = $request->request->get('email');
-        $password = $request->request->get('password');
-        $country = $request->request->get('country');
-        $photo = $request->request->get('photo');
+    public function create(Request $request) {
+        $user = new User();
 
-        if (empty($email)) {
-            throw new NotFoundHttpException('El correo es Requerido');
+        $form = $this->createForm(CreateUserForm::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush($user);
+
+            $request->getSession()->set('user_created', true);
+            $this->addFlash('success', 'Usuario creado!');
+
+            return $this->redirectToRoute('user_list');
         }
 
-        if (empty($password)) {
-            throw new NotFoundHttpException('La clave es Requerida');
-        }
-
-        $this->userRepo->save($email, $password, $country, $photo);
-
-        return $this->redirectToRoute('user_list');
+        return $this->render('user/create.html.twig', [
+            'controller_name' => 'UserController',
+            'form' => $form->createView()
+        ]);
     }
 
     /**

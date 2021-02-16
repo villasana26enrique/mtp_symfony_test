@@ -1,31 +1,39 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Home{% endblock %}
+
 {% block body %}
     <nav class="navbar navbar-default navbar-static-top">
         <div id="navbar" class="collapse navbar-collapse pull-right">
             <ul class="nav navbar-nav">
                 {% if app.user %}
-                    <li class="active"><a href="/home">Home</a></li>
+                    <li><a href="/home">Home</a></li>
                     <li><a href="/user">User</a></li>
                     <li><a href="/logout">Logout</a></li>
                 {% endif %}
             </ul>
         </div>
     </nav>
-    <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Email</th>
-      <th scope="col">Last Connection</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">{{ activities[0]["id"] }}</th>
-      <td>{{ activities[0]["email"] }}</td>
-      <td>{{ activities[0]["lastActivity"] }}</td>
-    </tr>
-  </tbody>
-</table>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Last Connection</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">{{ activities[0]["id"] }}</th>
+                  <td>{{ activities[0]["email"] }}</td>
+                  <td>{{ activities[0]["lastActivity"] }}</td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 {% endblock %}

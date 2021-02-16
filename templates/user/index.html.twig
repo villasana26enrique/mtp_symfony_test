@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}User Dashboard{% endblock %}
 
 {% block body %}
     <nav class="navbar navbar-default navbar-static-top">
@@ -8,10 +8,49 @@
             <ul class="nav navbar-nav">
                 {% if app.user %}
                     <li><a href="/home">Home</a></li>
-                    <li class="active"><a href="/user">User</a></li>
+                    <li><a href="/user">User</a></li>
                     <li><a href="/logout">Logout</a></li>
                 {% endif %}
             </ul>
         </div>
     </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12">
+                <!-- Button trigger modal -->
+                <a  class="btn btn-primary"
+                    href="{{ path('create_user') }}">
+                    Crear Usuario
+                </a>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Email</th>
+                <th scope="col">Country</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
