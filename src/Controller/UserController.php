@@ -8,8 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
-use App\Form\CreateUserForm;
-use App\Form\UpdateUserForm;
+use App\Form\UserForm;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
@@ -56,7 +55,7 @@ class UserController extends AbstractController
     public function create(Request $request) {
         $user = new User();
 
-        $form = $this->createForm(CreateUserForm::class, $user);
+        $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
@@ -83,7 +82,7 @@ class UserController extends AbstractController
     {
         $user = $this->userRepo->findOneBy(['id' => $id]);
 
-        $form = $this->createForm(UpdateUserForm::class, $user);
+        $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
@@ -99,8 +98,7 @@ class UserController extends AbstractController
 
         return $this->render('user/edit.html.twig', [
             'controller_name' => 'UserController',
-            'form' => $form->createView(),
-            'user' => $user
+            'form' => $form->createView()
         ]);
     }
 
