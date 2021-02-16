@@ -2,18 +2,32 @@
 
 {% block title %}Create User{% endblock %}
 {% block body %}
-    <nav class="navbar navbar-default navbar-static-top">
-        <div id="navbar" class="collapse navbar-collapse pull-right">
-            <ul class="nav navbar-nav">
-                {% if app.user %}
-                    <li><a href="/home">Home</a></li>
-                    <li><a href="/user">User</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                {% endif %}
-            </ul>
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Mtp Test</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        {% if app.user %}  
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user">User</a>
+            </li>
+          </ul>
+        {% endif %}
+        <span class="navbar-text">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </span>
+      </div>
     </nav>
-    <div class="container">
+    <div class="container mt-5">
         <div class="blog-header">
             <h2 class="blog-title">Crear Usuario</h2>
         </div>
