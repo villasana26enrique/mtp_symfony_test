@@ -50,6 +50,11 @@ class RecentActivityRepository extends ServiceEntityRepository
     }
     */
 
+    public function findAll()
+    {
+        return $this->findBy(array(), array('lastConnection' => 'DESC'), 10);
+    }
+
     public function saveActivity($email, $datetime)
     {
         $newActivity= new RecentActivity();
