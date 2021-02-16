@@ -9,6 +9,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use App\Form\CreateUserForm;
+use App\Form\UpdateUserForm;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
 {
@@ -19,10 +21,13 @@ class UserController extends AbstractController
     /**
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserPasswordEncoderInterface $encoder)
     {
         $this->entityManager = $entityManager;
         $this->userRepo = $entityManager->getRepository('App:User');
+        $this->encoder = $encoder;
     }
 
     /**
@@ -54,11 +59,13 @@ class UserController extends AbstractController
         $form = $this->createForm(CreateUserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
+            $user->setPassword($encoded);
             $this->entityManager->persist($user);
             $this->entityManager->flush($user);
 
             $request->getSession()->set('user_created', true);
-            $this->addFlash('success', 'Usuario creado!');
+            $this->addFlash('success', 'User created!');
 
             return $this->redirectToRoute('user_list');
         }
@@ -70,23 +77,31 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("user/{id}", name="update_user", methods={"PUT"})
+     * @Route("user/{id}", name="update_user")
      */
     public function update($id, Request $request)
     {
         $user = $this->userRepo->findOneBy(['id' => $id]);
 
-        if (!empty($request->request->get('email')))
-            $user->setEmail($request->request->get('email'));
+        $form = $this->createForm(UpdateUserForm::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
+            $user->setPassword($encoded);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush($user);
 
-        if (!empty($request->request->get('password')))
-            $user->setPassword($request->request->get('password'));
+            $request->getSession()->set('user_updated', true);
+            $this->addFlash('success', 'User updated!');
 
-        if (!empty($request->request->get('country')))
-            $user->setCountry($request->request->get('country'));
+            return $this->redirectToRoute('user_list');
+        }
 
-        $updatedUser = $this->userRepo->update($user);
-        return $this->redirectToRoute('user_list');
+        return $this->render('user/edit.html.twig', [
+            'controller_name' => 'UserController',
+            'form' => $form->createView(),
+            'user' => $user
+        ]);
     }
 
     /**

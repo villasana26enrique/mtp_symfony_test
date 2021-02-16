@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class CreateUserForm extends AbstractType
+class UpdateUserForm extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -54,7 +54,7 @@ class CreateUserForm extends AbstractType
                 SubmitType::class,
                 [
                     'attr' => ['class' => 'form-control btn-primary pull-right'],
-                    'label' => 'Crear usuario'
+                    'label' => 'Actualizar Usuario'
                 ]
             );
     }
@@ -74,6 +74,6 @@ class CreateUserForm extends AbstractType
      */
     public function getName()
     {
-        return 'user_create_form';
+        return 'user_update_form';
     }
 }
