@@ -55,41 +55,45 @@ class UserController extends AbstractController
      * @Route("/user/create", name="create_user")
      */
     public function create(Request $request) {
-        $user = new User();
+        try {
+            $user = new User();
+            $form = $this->createForm(UserForm::class, $user);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $uploadedFile = $form['profilePic']->getData();
+                if($uploadedFile) {
+                    $destination = $this->getParameter('kernel.project_dir').'/public/uploads/user_photo';
+                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
-        $form = $this->createForm(UserForm::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $uploadedFile = $form['profilePic']->getData();
-            if($uploadedFile) {
-                $destination = $this->getParameter('kernel.project_dir').'/public/uploads/user_photo';
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
+                    $uploadedFile->move(
+                        $destination,
+                        $newFilename
+                    );
 
-                $uploadedFile->move(
-                    $destination,
-                    $newFilename
-                );
+                    $user->setPhoto($newFilename);
+                }
 
-                $user->setPhoto($newFilename);
+                $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
+                $user->setPassword($encoded);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush($user);
+
+                $request->getSession()->set('user_created', true);
+                $this->addFlash('success', 'User created!');
+
+                return $this->redirectToRoute('user_list');
             }
 
-            $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
-            $user->setPassword($encoded);
-            $this->entityManager->persist($user);
-            $this->entityManager->flush($user);
-
-            $request->getSession()->set('user_created', true);
-            $this->addFlash('success', 'User created!');
-
+            return $this->render('user/form.html.twig', [
+                'controller_name' => 'UserController',
+                'create_user' => true,
+                'form' => $form->createView()
+            ]);
+        } catch(\Exception $e) {
+            $this->addFlash('danger', 'An error has occurred. Please try again.');
             return $this->redirectToRoute('user_list');
         }
-
-        return $this->render('user/form.html.twig', [
-            'controller_name' => 'UserController',
-            'create_user' => true,
-            'form' => $form->createView()
-        ]);
     }
 
     /**
@@ -97,40 +101,45 @@ class UserController extends AbstractController
      */
     public function update($id, Request $request)
     {
-        $user = $this->userRepo->findOneBy(['id' => $id]);
+        try {
+            $user = $this->userRepo->findOneBy(['id' => $id]);
 
-        $form = $this->createForm(UserForm::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $uploadedFile = $form['profilePic']->getData();
-            if($uploadedFile) {
-                $destination = $this->getParameter('kernel.project_dir').'/public/uploads/user_photo';
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
+            $form = $this->createForm(UserForm::class, $user);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $uploadedFile = $form['profilePic']->getData();
+                if($uploadedFile) {
+                    $destination = $this->getParameter('kernel.project_dir').'/public/uploads/user_photo';
+                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
-                $uploadedFile->move(
-                    $destination,
-                    $newFilename
-                );
+                    $uploadedFile->move(
+                        $destination,
+                        $newFilename
+                    );
 
-                $user->setPhoto($newFilename);
+                    $user->setPhoto($newFilename);
+                }
+                $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
+                $user->setPassword($encoded);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush($user);
+
+                $request->getSession()->set('user_updated', true);
+                $this->addFlash('success', 'User updated!');
+
+                return $this->redirectToRoute('user_list');
             }
-            $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
-            $user->setPassword($encoded);
-            $this->entityManager->persist($user);
-            $this->entityManager->flush($user);
 
-            $request->getSession()->set('user_updated', true);
-            $this->addFlash('success', 'User updated!');
-
+            return $this->render('user/form.html.twig', [
+                'controller_name' => 'UserController',
+                'create_user' => false,
+                'form' => $form->createView()
+            ]);
+        } catch (\Exception $e) {
+            $this->addFlash('danger', 'An error has occurred. Please try again.');
             return $this->redirectToRoute('user_list');
         }
-
-        return $this->render('user/form.html.twig', [
-            'controller_name' => 'UserController',
-            'create_user' => false,
-            'form' => $form->createView()
-        ]);
     }
 
     /**
@@ -138,9 +147,15 @@ class UserController extends AbstractController
      */
     public function delete($id)
     {
-        $user = $this->userRepo->findOneBy(['id' => $id]);
-        $this->entityManager->remove($user);
-        $this->entityManager->flush($user);
-        return $this->redirectToRoute('user_list');
+        try {
+            $user = $this->userRepo->findOneBy(['id' => $id]);
+            $this->entityManager->remove($user);
+            $this->entityManager->flush($user);
+            $this->addFlash('success', 'User deleted!');
+            return $this->redirectToRoute('user_list');
+        } catch (\Exception $e) {
+            $this->addFlash('danger', 'An error has occurred. Please try again.');
+            return $this->redirectToRoute('user_list');
+        }
     }
 }
