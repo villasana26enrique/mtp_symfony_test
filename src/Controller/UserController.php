@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use App\Form\UserForm;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Gedmo\Sluggable\Util\Urlizer;
 
 class UserController extends AbstractController
 {
@@ -58,6 +59,20 @@ class UserController extends AbstractController
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile = $form['imageFile']->getData();
+            if($uploadedFile) {
+                $destination = $this->getParameter('kernel.project_dir').'/public/uploads/user_photo';
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
+
+                $uploadedFile->move(
+                    $destination,
+                    $newFilename
+                );
+
+                $user->setPhoto($newFilename);
+            }
+
             $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
             $user->setPassword($encoded);
             $this->entityManager->persist($user);
@@ -86,6 +101,19 @@ class UserController extends AbstractController
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile = $form['imageFile']->getData();
+            if($uploadedFile) {
+                $destination = $this->getParameter('kernel.project_dir').'/public/uploads/user_photo';
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
+
+                $uploadedFile->move(
+                    $destination,
+                    $newFilename
+                );
+
+                $user->setPhoto($newFilename);
+            }
             $encoded = $this->encoder->encodePassword($user, $form->getData()->getPassword());
             $user->setPassword($encoded);
             $this->entityManager->persist($user);

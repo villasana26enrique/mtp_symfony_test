@@ -4,6 +4,7 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,11 +44,13 @@ class UserForm extends AbstractType
                 ]
             )
             ->add(
-                'photo',
-                TextType::class,
+                'imageFile',
+                FileType::class,
                 [
-                    'constraints' => [new NotBlank()],
-                    'attr' => ['class' => 'form-control']
+                    'attr' => ['class' => 'form-control'],
+                    'data_class' => null,
+                    'required' => false,
+                    'mapped' => false
                 ]
             )->add(
                 'submit',
