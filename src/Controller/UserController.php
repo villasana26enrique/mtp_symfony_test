@@ -105,12 +105,13 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("user/{id}", name="delete_user", methods={"DELETE"})
+     * @Route("user/delete/{id}", name="delete_user")
      */
     public function delete($id)
     {
         $user = $this->userRepo->findOneBy(['id' => $id]);
-        $this->userRepo->delete($user);
+        $this->entityManager->remove($user);
+        $this->entityManager->flush($user);
         return $this->redirectToRoute('user_list');
     }
 }
