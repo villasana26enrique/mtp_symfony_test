@@ -13,7 +13,7 @@ class Fixtures extends Fixture
         $user = new User();
         $user
             ->setEmail('admin@admin.com')
-            ->setPassword('$10$p6NmK1j.dcbWOkU/n423F.EMsoWoGBTDuitggbACHR/LgEPooIYRa')
+            ->setPassword('nhDr7OyKlXQju+Ge/WKGrPQ9lPBSUFfpK+B1xqx/+8zLZqRNX0+5G1zBQklXUFy86lCpkAofsExlXiorUcKSNQ==')
             ->setCountry('VE')
             ->setPhoto('');
 
